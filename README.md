@@ -23,6 +23,9 @@ In the same directory you built the loader and the module, do
 in a few seconds your device will boot. `loader` will wait a couple more
 seconds after issuing `xnuspy-getkernelv` in case SEPROM needs to be exploited.
 
+# All in one loader
+If you want to activate xnuspy in a single command (e.g. embed into pongoOS), build with `CONSOLIDATE_CTL=1 make`, and use `xnuctl_consolidated` with single command `xnuspy-prep`.
+
 # Known Issues
 Sometimes a couple of my phones would get stuck at "Booting" after checkra1n's KPF
 runs. I have yet to figure out what causes this, but if it happens, try again.

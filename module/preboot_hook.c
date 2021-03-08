@@ -601,7 +601,16 @@ next:
         xnuspy_fatal_error();
     }
 
-    void *xnuspy_ctl_image = alloc_static(loader_xfer_recv_count);
+#ifdef CONSOLIDATE_CTL
+    static uint8_t ctlmod_data[75 * 1024] = "XNUSPY_CTL_STUB_SPACE";
+    int ctlmod_size = sizeof(ctlmod_data);
+#else
+    uint8_t *ctlmod_data = loader_xfer_recv_data;
+    int ctlmod_size = loader_xfer_recv_count;
+#endif
+
+    void *xnuspy_ctl_image = alloc_static(ctlmod_size);
+    printf("xnuspy: loading image length %d", ctlmod_size);
 
     if(!xnuspy_ctl_image){
         puts("xnuspy: alloc_static");
@@ -612,7 +621,7 @@ next:
         xnuspy_fatal_error();
     }
 
-    memcpy(xnuspy_ctl_image, loader_xfer_recv_data, loader_xfer_recv_count);
+    memcpy(xnuspy_ctl_image, ctlmod_data, ctlmod_size);
 
     uint64_t num_free_instrs = g_exec_scratch_space_size / sizeof(uint32_t);
     uint32_t *scratch_space = xnu_va_to_ptr(g_exec_scratch_space_addr);

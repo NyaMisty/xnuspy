@@ -28,6 +28,19 @@ ifneq ($(XNUSPY_TRAMP_PAGES), )
 preboot_hook.o : CFLAGS += -DXNUSPY_TRAMP_PAGES=$(XNUSPY_TRAMP_PAGES)
 endif
 
+
+ifneq ($(CONSOLIDATE_CTL), )
+
+CFLAGS += -DCONSOLIDATE_CTL
+
+xnuspy_consolidated: xnuspy
+	python2 consolidate.py
+
+all: xnuspy_consolidated
+
+endif
+
+
 preboot_hook.o : $(INSTR_FILES) preboot_hook.c preboot_hook.h \
 	common/xnuspy_structs.h
 	$(CC) $(CFLAGS) preboot_hook.c -c
@@ -35,3 +48,4 @@ preboot_hook.o : $(INSTR_FILES) preboot_hook.c preboot_hook.h \
 xnuspy : $(OBJECT_FILES) xnuspy.c preboot_hook.o common/common.h \
 	pf/offsets.h pf/pfs.h common/xnuspy_structs.h
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJECT_FILES) preboot_hook.o xnuspy.c -o xnuspy
+

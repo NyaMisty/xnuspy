@@ -192,6 +192,12 @@ static void add_kext_range(struct kextrange **ranges, const char *kext,
 }
 
 static void xnuspy_prep(const char *cmd, char *args){
+    queue_rx_string("xargs rootdev=md0"
+            " use_contiguous_hint=0 msgbuf=0x3c000"
+            " atm_diagnostic_config=0x20000000\n");
+    //strcpy((char*)((int64_t)gBootArgs->CommandLine - 0x800000000 + kCacheableView ), );
+    
+    xnuspy_getkernelv(cmd, args);
     /* all the patchfinders in pf/pfs.h currently do 32 bit */
     xnu_pf_patchset_t *patchset = xnu_pf_patchset_create(XNU_PF_ACCESS_32BIT);
 
